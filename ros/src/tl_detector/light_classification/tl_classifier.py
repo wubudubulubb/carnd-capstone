@@ -11,7 +11,7 @@ class TLClassifier(object):
             # load model from Marvin (?)
             model_path = 'SimModel.pb' # TODO: change
 
-        self.model = load_graph(model_path)
+        self.model = self.load_graph(model_path)
         self.session = tf.Session(graph=self.model)
 
     def get_classification(self, image):
