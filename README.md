@@ -1,3 +1,21 @@
+
+This is the submisson for Udacity SDCND Term 3, Capstone Project - Programming a Real Self-Driving Car
+
+This submission for the project is prepared by team RoboCar
+
+__Team Members:__
+
+ * ymlai87416@gmail.com         Lai Yiu Ming
+ * hassan.nust@gmail.com        Muhammad Hassan
+ * emre.sezginalp@gmail.com     Emre Sezginalp
+ * damfinn@gmail.com            Damian Finnerty
+ * marv.ris@gmail.com           Marvin
+
+
+
+
+Project instructions by Udacity:
+
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
 Please use **one** of the two installation options, either native **or** docker installation.
@@ -22,6 +40,8 @@ Please use **one** of the two installation options, either native **or** docker 
 ### Docker Installation
 [Install Docker](https://docs.docker.com/engine/installation/)
 
+[Install Nvidia-Docker](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0))
+
 Build the docker container
 ```bash
 docker build . -t capstone
@@ -29,13 +49,13 @@ docker build . -t capstone
 
 Run the docker file
 ```bash
-docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
+docker run --runtime=nvidia -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
 ```
 
 For enable X-display
 ```bash
 sudo xhost +local:docker
-sudo docker run -p 4567:4567 -v $PWD:/capstone -e DISPLAY=$DISPLAY -v /tmp/log:/root/.ros/ -v /tmp/.X11-unix:/tmp/.X11-unix --rm -it capstone
+sudo docker run --runtime=nvidia -p 4567:4567 -v $PWD:/capstone -e DISPLAY=$DISPLAY -v /tmp/log:/root/.ros/ -v /tmp/.X11-unix:/tmp/.X11-unix --rm -it capstone
 ```
 
 ### Port Forwarding
