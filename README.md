@@ -1,98 +1,171 @@
+# Udacity Car Capstone project 
 
-This is the submisson for Udacity SDCND Term 3, Capstone Project - Programming a Real Self-Driving Car
+[//]: # (Image References)
 
-This submission for the project is prepared by team RoboCar
+[image1]: ./imgs/simulator.png "simulator"
+[image2]: ./imgs/ros_code_structure.PNG "ros code structure"
+[image3]: ./imgs/tl-detector-ros-graph.png "traffic light detector node"
+[image4]: ./imgs/waypoint-updater-ros-graph.png "waypoint updater node"
+[image5]: ./imgs/dbw-node-ros-graph.png "dbw node"
+[image6]: ./imgs/result_highway_video.PNG "result highway"
+[image7]: ./imgs/result_testlot_video.PNG "result testlot"
+[image8]: ./imgs/result_rosbag_video.PNG "rosbag testlot"
 
-__Team Members:__
+Presented by
 
- * ymlai87416@gmail.com         Lai Yiu Ming
- * hassan.nust@gmail.com        Muhammad Hassan
- * emre.sezginalp@gmail.com     Emre Sezginalp
- * damfinn@gmail.com            Damian Finnerty
- * marv.ris@gmail.com           Marvin
+#### RoboCar team
+
+Project leader:
+<table style="border-collapse: collapse; border: none;">
+<tr>
+    <td>Lai Yiu Ming, Tom</td>
+    <td>ymlai87416@gmail.com</td>
+</tr>
+</table>
+
+Members:
+<table style="border-collapse: collapse; border: none;">
+<tr>
+    <td>Muhammand Hassan</td>
+    <td>hassan.nust@gmail.com</td>
+</tr>
+<tr>
+    <td>Emre Sezginalp</td>
+    <td>emre.sezginalp@gmail.com</td>
+</tr>
+<tr>
+    <td>Damian Finnerty</td>
+    <td>damfinn@gmail.com</td>
+</tr>
+<tr>
+    <td>Marvin</td>
+    <td>marv.ris@gmail.com</td>
+</tr>
+</table>
+
+## Project background
+For this project, our team writes ROS nodes to implement the core functionality of the autonomous vehicle system,
+including traffic light detection, control, and waypoint following! We test our code using a simulator
+and submit the project to Udacity to run it on Carla.
+
+The following is a system architecture diagram showing the ROS nodes and topics used in the project.
+The ROS nodes and topics shown in the diagram are
+described briefly in the Code Structure section below, and more detail is provided for each node in later sections.
+
+![alt text][image2]
+
+## Project setup
+
+### Project directories overview
+
+In this project, there are multiple folders and serve different purposes.
+
+| Folder | Description |
+| :------------ | :----------- |
+| /data       | Contain waypoints files for 2 simulated scenario  |
+| /img       | Contain image for read me and report  |
+| /model       | Traffic light detection for both simulated and real environments |
+| /report       | Report for this project |
+| /ros       | ROS catkin workspace  |
+| /ros/devel       |  development folder |
+| /ros/launch       | Contains launch files, one for simulator and one for site testing |
+| /ros/src       | ROS nodes source files  |
 
 
-Project instructions by Udacity:
+### Project setup
 
-This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
+This project uses Docker to develop and hence it is recommended to run this project inside a Docker container.
 
-Please use **one** of the two installation options, either native **or** docker installation.
+#### System requirement
 
-### Native Installation
+##### Development environment
+* Ubuntu 16.04 Xenial Xerus or Ubuntu 14.04 Trusty Tahir
+* Processor: 3.0GHz processor or above
+* 6GB System RAM
+* Nvidia GPU card
 
-* Be sure that your workstation is running Ubuntu 16.04 Xenial Xerus or Ubuntu 14.04 Trusty Tahir. [Ubuntu downloads can be found here](https://www.ubuntu.com/download/desktop).
-* If using a Virtual Machine to install Ubuntu, use the following configuration as minimum:
-  * 2 CPU
-  * 2 GB system memory
-  * 25 GB of free hard drive space
+##### Udacity Self-Driving Car Hardware Specs
+* 31.4 GiB Memory
+* Intel Core i7-6700K CPU @ 4 GHz x 8
+* TITAN X Graphics
+* 64-bit OS
 
-  The Udacity provided virtual machine has ROS and Dataspeed DBW already installed, so you can skip the next two steps if you are using this.
+#### Setup development environment
 
-* Follow these instructions to install ROS
-  * [ROS Kinetic](http://wiki.ros.org/kinetic/Installation/Ubuntu) if you have Ubuntu 16.04.
-  * [ROS Indigo](http://wiki.ros.org/indigo/Installation/Ubuntu) if you have Ubuntu 14.04.
-* [Dataspeed DBW](https://bitbucket.org/DataspeedInc/dbw_mkz_ros)
-  * Use this option to install the SDK on a workstation that already has ROS installed: [One Line SDK Install (binary)](https://bitbucket.org/DataspeedInc/dbw_mkz_ros/src/81e63fcc335d7b64139d7482017d6a97b405e250/ROS_SETUP.md?fileviewer=file-view-default)
-* Download the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases).
+1. [Install Docker](https://docs.docker.com/install/)
 
-### Docker Installation
-[Install Docker](https://docs.docker.com/engine/installation/)
+2. [Install Nvidia-Docker](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0))
 
-[Install Nvidia-Docker](https://github.com/nvidia/nvidia-docker/wiki/Installation-(version-2.0))
+3. Build the docker container
 
-Build the docker container
-```bash
-docker build . -t capstone
-```
+    ```
+    docker build . -t capstone
+    ```
 
-Run the docker file
-```bash
-docker run --runtime=nvidia -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
-```
+4. Run the docker file
 
-For enable X-display
-```bash
-sudo xhost +local:docker
-sudo docker run --runtime=nvidia -p 4567:4567 -v $PWD:/capstone -e DISPLAY=$DISPLAY -v /tmp/log:/root/.ros/ -v /tmp/.X11-unix:/tmp/.X11-unix --rm -it capstone
-```
+    ```
+    docker run --runtime=nvidia -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
+    ```
 
-### Port Forwarding
-To set up port forwarding, please refer to the [instructions from term 2](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77)
+5. To enable X-display in docker environment
+    
+    ```
+    sudo xhost +local:docker
+    sudo docker run --runtime=nvidia -p 4567:4567 -v $PWD:/capstone -e DISPLAY=$DISPLAY -v /tmp/log:/root/.ros/ -v /tmp/.X11-unix:/tmp/.X11-unix --rm -it capstone
+    ```
 
-### Usage
+6. Run ROS command to kick start the program
 
-1. Clone the project repository
-```bash
-git clone https://github.com/udacity/CarND-Capstone.git
-```
+    ```
+    cd ros
+    catkin_make
+    source devel/setup.sh
+    roslaunch launch/styx.launch
+    ```
 
-2. Install python dependencies
-```bash
-cd CarND-Capstone
-pip install -r requirements.txt
-```
-3. Make and run styx
-```bash
-cd ros
-catkin_make
-source devel/setup.sh
-roslaunch launch/styx.launch
-```
-4. Run the simulator
+7. Run the simulator
 
-### Real world testing
-1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
-2. Unzip the file
-```bash
-unzip traffic_light_bag_file.zip
-```
-3. Play the bag file
-```bash
-rosbag play -l traffic_light_bag_file/traffic_light_training.bag
-```
-4. Launch your project in site mode
-```bash
-cd CarND-Capstone/ros
-roslaunch launch/site.launch
-```
-5. Confirm that traffic light detection works on real life images
+### Simulator
+
+The simulator (ROS integration simulator) can be downloaded at [here](https://github.com/udacity/self-driving-car-sim/releases),
+there are 2 maps available. `Highway` and `Test Lot`.
+
+Self-driving car is a complex system and consist of the following important modules in order to drive properly.
+
+![alt text][image1]
+
+In this project, we are going to create a self-driving car which is able to follow waypoints, and stop
+ in front of a red light.
+
+This project is implemented in ROS (Robot operating system). Please refer
+to [this link](./report/system_architecture.md) for details.
+
+### Individual component walk-thought
+
+#### Speed and Steering
+
+Please refer to [this link](./report/control.md) for further information.
+
+#### Traffic light detection
+
+Please refer to [this link](./report/perception.md) for further information.
+
+## Result
+
+This project composes of 3 parts: Running on the simulator, pre Carla testing on ROS bag and
+testing on Carla.
+
+#### Running on the simulator
+
+[<img src="https://github.com/ymlai87416/CarND-Capstone/blob/master/imgs/result_highway_video.PNG">](https://youtu.be/K3YOUEuKAwQ)
+
+[<img src="https://github.com/ymlai87416/CarND-Capstone/blob/master/imgs/result_testlot_video.PNG">](https://youtu.be/J22OQShw-7o)
+
+#### Pre Carla testing on ROS bag
+
+[<img src="https://github.com/ymlai87416/CarND-Capstone/blob/master/imgs/result_rosbag_video.PNG">](https://youtu.be/lCfDJDUgrS8)
+
+#### Testing on Carla
+
+TBA
